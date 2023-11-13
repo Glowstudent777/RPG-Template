@@ -1,0 +1,3 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/User/Desktop/RPG/RPG/Content/Textures/splash_screen.png","C:/Users/User/Desktop/RPG/RPG/Content/bin/DesktopGL/Textures/splash_screen.xnb","TextureProcessor","Texture2DContent",5941,3686485,0.4968944
+"C:/Users/User/Desktop/RPG/RPG/Content/Textures/white_background.xnb","C:\Users\User\Desktop\RPG\RPG\Content\bin\DesktopGL\Textures/white_background.xnb","CopyItem","File",287,287,0.005387
