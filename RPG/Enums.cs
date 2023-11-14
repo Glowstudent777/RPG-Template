@@ -13,4 +13,16 @@
 		Select,
 		Start
 	}
+	public enum Direction
+	{
+		Left,
+		Right,
+		Up,
+		Down
+	}
+	public enum GameEventType
+	{
+		Message,
+		EventSwitch
+	}
 }

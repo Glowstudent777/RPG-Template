@@ -120,7 +120,7 @@ namespace RPG.Managers
 			if (_currentPhase == Phase.FadeIn || _currentPhase == Phase.FadeOut)
 			{
 				var color = new Color((byte)0, (byte)0, (byte)0, _alpha);
-				spriteBatch.Draw(_backgroundTexture, new Rectangle(0, 0, 160, 144), color);
+				spriteBatch.Draw(_backgroundTexture, new Rectangle(0, 0, 1280, 720), color);
 			}
 		}
 	}

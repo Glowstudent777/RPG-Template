@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RPG.Managers;
+﻿using RPG.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RPG.Screens;
-using RPG;
+using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace RPG.Screens
 {
 	class ScreenSplash : Screen
 	{
-
 		private Texture2D _image;
+		private ManagerInput _managerInput;
+		private double splashDuration = 3000;
+		private double elapsedSplashTime = 0;
 
 		public ScreenSplash(ManagerScreen managerScreen) : base(managerScreen)
 		{
-
+			_managerInput = new ManagerInput();
 		}
 
 		public override void LoadContent(ContentManager content)
@@ -28,25 +26,21 @@ namespace RPG.Screens
 
 		public override void Initialize()
 		{
-			ManagerInput.FireNewInput += ManagerInput_FireNewInput;
 		}
 
 		public override void Uninitialize()
 		{
-			ManagerInput.FireNewInput -= ManagerInput_FireNewInput;
-		}
-
-		void ManagerInput_FireNewInput(object sender, NewInputEventArgs e)
-		{
-			if (e.Input == Input.Enter)
-			{
-				ManagerScreen.LoadNewScreen(new ScreenBlank(ManagerScreen));
-			}
 		}
 
 		public override void Update(double gameTime)
 		{
+			elapsedSplashTime += gameTime;
+			_managerInput.Update(gameTime);
 
+			if (_managerInput.KeyPressed(Keys.Space, Keys.Enter) || elapsedSplashTime >= splashDuration)
+			{
+				ManagerScreen.LoadNewScreen(new ScreenBlank(ManagerScreen), true);
+			}
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

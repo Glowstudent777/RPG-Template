@@ -37,7 +37,7 @@ namespace RPG
 			ManagerContent.Initialize(Content);
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 			_managerScreen = new ManagerScreen(Content);
-			_managerScreen.LoadNewScreen(new ScreenSplash(_managerScreen), false);
+			_managerScreen.LoadNewScreen(new ScreenSplash(_managerScreen), true);
 		}
 
 		protected override void Update(GameTime gameTime)
@@ -45,14 +45,15 @@ namespace RPG
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
-			// TODO: Add your update logic here
+			_managerInput.Update(gameTime.ElapsedGameTime.Milliseconds);
+			_managerScreen.Update(gameTime.ElapsedGameTime.Milliseconds);
 
 			base.Update(gameTime);
 		}
 
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(Color.Black);
 
 			_spriteBatch.Begin();
 			_managerScreen.Draw(_spriteBatch);

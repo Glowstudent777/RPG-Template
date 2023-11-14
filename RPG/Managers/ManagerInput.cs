@@ -1,29 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using RPG;
 
 namespace RPG.Managers
 {
 	public class ManagerInput
 	{
-		private KeyboardState _keyState;
-		private KeyboardState _lastKeyState;
-		private Keys _lastKey;
-		private static event EventHandler<NewInputEventArgs> _FireNewInput;
+		private KeyboardState currentKeyState, prevKeyState;
 		private double _counter;
 		private static double _cooldown;
 		private static double _pauseCounter;
 		private static bool _pause;
 		private static double _pauseTime;
-
-		public static event EventHandler<NewInputEventArgs> FireNewInput
-		{
-			add { _FireNewInput += value; }
-			remove { _FireNewInput -= value; }
-		}
 
 		public static bool ThrottleInput { get; set; }
 		public static bool LockMovement { get; set; }
@@ -50,7 +38,6 @@ namespace RPG.Managers
 				}
 			}
 
-
 			if (_cooldown > 0)
 			{
 				_counter += gameTime;
@@ -63,44 +50,38 @@ namespace RPG.Managers
 					return;
 			}
 
-			ComputerControls(gameTime);
+			prevKeyState = currentKeyState;
+			currentKeyState = Keyboard.GetState();
 		}
 
-		public void ComputerControls(double gameTime)
+		public bool KeyPressed(params Keys[] keys)
 		{
-			_keyState = Keyboard.GetState();
-			if (_keyState.IsKeyUp(_lastKey) && _lastKey != Keys.None)
+			foreach (Keys key in keys)
 			{
-				if (_FireNewInput != null)
-					_FireNewInput(this, new NewInputEventArgs(Input.None));
+				if (currentKeyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key))
+					return true;
 			}
-
-			CheckKeyState(Keys.Left, Input.Left);
-			CheckKeyState(Keys.Right, Input.Right);
-			CheckKeyState(Keys.Up, Input.Up);
-			CheckKeyState(Keys.Down, Input.Down);
-			CheckKeyState(Keys.Enter, Input.Enter);
-			CheckKeyState(Keys.A, Input.A);
-			CheckKeyState(Keys.S, Input.S);
-			CheckKeyState(Keys.RightShift, Input.Select);
-			CheckKeyState(Keys.Enter, Input.Start);
-
-			_lastKeyState = _keyState;
+			return false;
 		}
 
-		private void CheckKeyState(Keys key, Input fireInput)
+		public bool KeyReleased(params Keys[] keys)
 		{
-			if (_keyState.IsKeyDown(key))
+			foreach (Keys key in keys)
 			{
-				if (!ThrottleInput || (ThrottleInput && _lastKeyState.IsKeyUp(key)))
-				{
-					if (_FireNewInput != null)
-					{
-						_FireNewInput(this, new NewInputEventArgs(fireInput));
-						_lastKey = key;
-					}
-				}
+				if (currentKeyState.IsKeyUp(key) && prevKeyState.IsKeyDown(key))
+					return true;
 			}
+			return false;
+		}
+
+		public bool KeyDown(params Keys[] keys)
+		{
+			foreach (Keys key in keys)
+			{
+				if (currentKeyState.IsKeyDown(key))
+					return true;
+			}
+			return false;
 		}
 
 		public static void PauseInput(double milisecond)
