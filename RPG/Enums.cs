@@ -1,5 +1,24 @@
 ﻿namespace RPG
 {
+	public enum ComponentType
+	{
+		Sprite,
+		PlayerInput,
+		Animation,
+		Collision,
+		AIMovement,
+		EnemyOctorok,
+		Camera,
+		Equipment,
+		GUI,
+		Damage,
+		Stats,
+		DeathAnimation,
+		Script,
+		StatusEffects,
+		EventTriggerDistance,
+		BlockPush
+	}
 	public enum Input
 	{
 		Left,
@@ -12,6 +31,13 @@
 		S,
 		Select,
 		Start
+	}
+	public enum State
+	{
+		Standing,
+		Walking,
+		Special,
+		Pushing
 	}
 	public enum Direction
 	{
