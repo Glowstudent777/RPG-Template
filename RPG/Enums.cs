@@ -41,10 +41,10 @@
 	}
 	public enum Direction
 	{
-		Left,
-		Right,
+		Down,
 		Up,
-		Down
+		Left,
+		Right
 	}
 	public enum GameEventType
 	{
