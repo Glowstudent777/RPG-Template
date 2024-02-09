@@ -9,12 +9,14 @@ namespace RPG.Components
 {
 	class Player
 	{
-		private Vector2 position = new Vector2(500, 300);
-		private int speed = 1;
-		private Direction direction = Direction.Down;
+		private Vector2 position = Vector2.Zero;
+		private Vector2 direction = Vector2.Zero;
+		private Direction LookDirection = Direction.Down;
+		private int speed = 15;
 		private bool isMoving = false;
 		private KeyboardState kStateOld = Keyboard.GetState();
 		public bool dead = false;
+		private bool EnableDiagonalMovement = false;
 
 		public SpriteAnimation anim;
 
@@ -47,60 +49,49 @@ namespace RPG.Components
 
 			if (kState.IsKeyDown(Keys.Right))
 			{
-				direction = Direction.Right;
+				LookDirection = Direction.Right;
+				if (EnableDiagonalMovement) direction += new Vector2(speed * dt, 0);
+				else direction = new Vector2(speed * dt, 0);
 				isMoving = true;
 			}
 
 			if (kState.IsKeyDown(Keys.Left))
 			{
-				direction = Direction.Left;
+				LookDirection = Direction.Left;
+				if (EnableDiagonalMovement) direction -= new Vector2((speed * dt), 0);
+				else direction = new Vector2(-(speed * dt), 0);
 				isMoving = true;
 			}
 
 			if (kState.IsKeyDown(Keys.Up))
 			{
-				direction = Direction.Up;
+				LookDirection = Direction.Up;
+				if (EnableDiagonalMovement) direction -= new Vector2(0, (speed * dt));
+				else direction = new Vector2(0, -(speed * dt));
 				isMoving = true;
 			}
 
 			if (kState.IsKeyDown(Keys.Down))
 			{
-				direction = Direction.Down;
+				LookDirection = Direction.Down;
+				if (EnableDiagonalMovement) direction += new Vector2(0, (speed * dt));
+				else direction = new Vector2(0, (speed * dt));
 				isMoving = true;
 			}
 
 			if (kState.IsKeyDown(Keys.Space))
 				isMoving = false;
-
 			if (dead)
 				isMoving = false;
 
 			if (isMoving)
 			{
-				switch (direction)
-				{
-					case Direction.Right:
-						if (position.X < 1275)
-							position.X += speed * dt;
-						break;
-					case Direction.Left:
-						if (position.X > 225)
-							position.X -= speed * dt;
-						break;
-					case Direction.Down:
-						if (position.Y < 1250)
-							position.Y += speed * dt;
-						break;
-					case Direction.Up:
-						if (position.Y > 200)
-							position.Y -= speed * dt;
-						break;
-				}
+				direction.Normalize();
+				position += direction;
+
+				anim = animations[(int)LookDirection];
+				anim.Position = position;
 			}
-
-			anim = animations[(int)direction];
-
-			anim.Position = new Vector2(position.X - 48, position.Y - 48);
 
 			if (kState.IsKeyDown(Keys.Space))
 				anim.setFrame(0);
